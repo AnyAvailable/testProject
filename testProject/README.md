@@ -12,7 +12,7 @@ Than compile it. use this command:
 After process completed your utility would be at home/'username'/Загрузки/dist
 
 ## **Installation** ##
-Soon after you get your utility in any directory switch it's RWX-bytes make it executable (you have to be in utility's directory). use this command:
+Soon after you get your utility in any directory switch it's RWX-bites make it executable (you have to be in utility's directory). use this command:
 **chmod -c 0755 clipp**
 Than switch it's path to path from PATH. use this command:
 **echo $PATH** -> path0:path1:path2
