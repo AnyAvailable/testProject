@@ -1,6 +1,7 @@
 import requests
 import json
-from packaging.version import parse 
+from rpm_vercmp import vercmp
+
 def getbranches():
     """returns a list of processed brunches in the json format and lists of architectures"""
     #this condition checks if server is available and query is correct#
@@ -103,18 +104,16 @@ def packageandarchparce(result):
         except IndexError: # if value of i more than length of p10 than put all other packages into parcedpackages["packsinsisnotinp10"] due to arch
             parcedpackages["packsinsisnotinp10"][sisdict['arch']].append(sisdict)
         i += 1 # ++i
-
+    
     i = 0 # this increment used to call package from p10 which index equals to sis
     for sisdict in sis: # choosing dictionary from sis
         try: # if value of i more than length of p10 than put all other packages into parcedpackages["sisvermorethanp10packs"] due to arch
             if sisdict['arch'] == p10[i]['arch']: # here condition checks if arch of sisdict equals to arch of p10 due to index(during checking condition index of p10dict equals index of sisdict)
-                #print(parse(sisdict['version']))
-                if parse(sisdict['version']+"-"+sisdict['release']) > parse(p10[i]['version']+"-"+p10[i]['release']):# here is used parse method of packagin.version lib, that can be used to compare versions 
+                comparingstring = vercmp(sisdict['version']+"-"+sisdict['release'], p10[i]['version']+"-"+p10[i]['release']) # here is used vercmp method of rpm-vercmp lib, that can be used to compare versions 
+                if comparingstring != -1 and comparingstring != 0:
                     parcedpackages["sisvermorethanp10packs"][sisdict['arch']].append(sisdict) # if everything is all right in upper code it adds package into dictionary        
         except IndexError: # if value of i more than length of p10 than put all other packages into parcedpackages["sisvermorethanp10packs"] due to arch
             parcedpackages["sisvermorethanp10packs"][sisdict['arch']].append(sisdict)
         i += 1 # ++i
 
     print(json.dumps(parcedpackages, indent=4)) # this line output parcedpackage like json structure
-
-
